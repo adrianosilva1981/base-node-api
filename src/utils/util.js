@@ -2,9 +2,11 @@
 
 const nodemailer = require('nodemailer');
 const env = require('../config/environments');
+const handlebars = require('handlebars');
+const fs = require('fs');
 
 class Util {
-    constructor() {}
+    constructor() { }
 
     encrytpt(data) {
         let aux = Buffer.from(data).toString('base64');
@@ -24,8 +26,18 @@ class Util {
         return aux;
     }
 
-    async sendmail(to, subject, message) {
+    async sendmail(to, subject, tmpl) {
         let info = ['none...'];
+
+        let readHTMLFile = (path, success, err) => {
+            fs.readFile(path, { encoding: 'utf-8' }, function (error, html) {
+                if (error) { 
+                    err(error);
+                } else {
+                    success(html);
+                }
+            });
+        };
 
         let transporter = nodemailer.createTransport({
             host: env.mail.host,
@@ -38,13 +50,23 @@ class Util {
             }
         });
 
-        info = await transporter.sendMail({
-            from: env.mail.from,
-            to: to,
-            subject: subject,
-            message: message,
-            html: '<p>Hello word!</p>'
-        });
+        readHTMLFile(`${__dirname}\\..\\templates\\${tmpl}`,
+            (result) => {
+                const template = handlebars.compile(result);
+                const replacements = { username: "Adriano Silva" };
+                const html = template(replacements);
+
+                info = transporter.sendMail({
+                    from: env.mail.from,
+                    to: to,
+                    subject: subject,
+                    html: html
+                });
+            },
+            (error) => {
+                info = error
+            }
+        );
 
         return info;
     }

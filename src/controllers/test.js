@@ -30,7 +30,7 @@ exports.sendmail = async (req, res, next) => {
         
         //send mail
         const Utils = new Util();
-        result = await Utils.sendmail(to, subject, message);
+        result = await Utils.sendmail(to, subject, 'emails/test.html');
         
         res.status(200).send(result);
     } catch (error) {
