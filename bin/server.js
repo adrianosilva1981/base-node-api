@@ -1,20 +1,22 @@
+const fs = require('fs');
+const env = require('../src/config/environments');
 const app = require('../src/app');
+const port = env.runnning_port;
 
-const port = normalizaPort(process.env.PORT || '3000');
+// with ssl
+const https = require('https');
+// without ssl
+//const http = require('http');
 
-function normalizaPort(val) {
-    const port = parseInt(val, 10);
-    if (isNaN(port)) {
-        return val;
-    }
+// with ssl
+const privateKey = fs.readFileSync(`${env.certificates_path}server.key`, 'utf8');
+const certificate = fs.readFileSync(`${env.certificates_path}server.cert`, 'utf8');
+const credentials = { key: privateKey, cert: certificate };
 
-    if (port >= 0) {
-        return port;
-    }
+// with ssl
+const httpsServer = https.createServer(credentials, app);
+httpsServer.listen(port, () => { console.log(`api listening on port ${port}`) });
 
-    return false;
-}
-
-app.listen(port, function () {
-    console.log(`app listening on port ${port}`)
-})
+// without ssl
+// const httpServer = http.createServer(app);
+// httpServer.listen(port, () => { console.log(`app listening on port ${port}`) });
