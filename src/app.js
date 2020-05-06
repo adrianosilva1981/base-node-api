@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const config = require('./config');
+const config = require('./config/environments');
 
 // const router = express.Router();
 

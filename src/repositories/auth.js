@@ -1,17 +1,21 @@
 'use strict';
 
 const mysql = require('mysql');
-const config = require('../config');
+const conn = require('../config/environments');
 
-const connection = mysql.createConnection({
-    host: config.mysql_conn.address,
-    user: config.mysql_conn.username,
-    password: config.mysql_conn.password,
-    database: config.mysql_conn.database
+let connection = mysql.createConnection({
+    host: conn.mysql_conn.address,
+    user: conn.mysql_conn.username,
+    password: conn.mysql_conn.password,
+    database: conn.mysql_conn.database
 });
 
-// you can pass the connection parameters here to connect in differents databases
-// exports.authorize = (email, pass, host, user, password...) => { 
+/*
+you can pass the connection parameters here to connect in differents databases:
+    exports.authorize = (email, pass, host, user, password...) => { 
+or pass 'project' and 'module' to search database connections infos into json config:
+    exports.getSomeData = (user, project, ) => { 
+*/
 exports.authorize = (email, pass) => {
     const query = `SELECT * FROM users WHERE email = '${email}' AND password = '${pass}' LIMIT 1;`;
 
