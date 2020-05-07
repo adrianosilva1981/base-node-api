@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 const env = require('../config/environments');
 const handlebars = require('handlebars');
 const fs = require('fs');
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 class Util {
     constructor() { }
@@ -26,12 +27,28 @@ class Util {
         return aux;
     }
 
+    async csvCreator(path, header, data) {
+        return new Promise((resolve, reject) => {
+            try {
+                const csvWriter = createCsvWriter({
+                    path: `${__dirname}\\..\\storage\\${path}`,
+                    header: header
+                });
+                csvWriter.writeRecords(data).then(
+                    () => { resolve(path) }
+                );
+            } catch (error) {
+                reject(error);
+            }
+        })
+    }
+
     async sendmail(to, subject, tmpl) {
         let info = ['none...'];
 
         let readHTMLFile = (path, success, err) => {
             fs.readFile(path, { encoding: 'utf-8' }, function (error, html) {
-                if (error) { 
+                if (error) {
                     err(error);
                 } else {
                     success(html);
