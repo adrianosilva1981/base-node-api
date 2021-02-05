@@ -5,10 +5,10 @@ module.exports = {
     version: '0.0.1',
     production: false,
     mysql_conn: {
-        address: 'localhost',
-        username: 'root',
-        password: '',
-        database: 'base1',
+        host: 'localhost',
+        user: 'root',
+        password: 'root',
+        database: 'fastgp',
         port: 3306
     },
     mail: {

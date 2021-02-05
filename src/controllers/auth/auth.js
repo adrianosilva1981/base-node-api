@@ -1,6 +1,7 @@
-const authService = require('../services/auth-service');
-const authRepository = require('../repositories/auth');
-const paramsValidator = require('../validators/fluent-validator');
+const authService = require('../../services/auth-service'); //services/auth-service
+const authRepository = require('../../repositories/auth/auth');
+const paramsValidator = require('../../validators/fluent-validator');
+const bcrypt = require('bcrypt');
 
 exports.auth = async (req, res, next) => {
     try {
@@ -17,10 +18,12 @@ exports.auth = async (req, res, next) => {
         let result = []
 
         const email = req.body.email;
-        const password = req.body.password;
+        const password = bcrypt.hashSync(req.body.password, 0);
         const authorize = await authRepository.authorize(email, password);
 
-        if (authorize) {
+        console.log(password)
+
+        if (authorize.length) {
             const token = await authService.generateToken({
                 id: authorize[0].id,
                 email: authorize[0].email,
@@ -34,8 +37,7 @@ exports.auth = async (req, res, next) => {
                 token: token
             });
         } else {
-            result = authorize;
-            console.log(result);
+            result = {'message': 'INVALID LOGIN'};
         }
 
         res.status(200).send(result);

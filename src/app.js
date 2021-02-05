@@ -5,13 +5,12 @@ const env = require('./config/environments');
 
 // routes
 const index = require('./routes/index');
-const authRoute = require('./routes/auth');
-const testRoute = require('./routes/test');
+const authRoute = require('./routes/auth/auth');
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-// enable CORS - in the OCTOS I think that's not necessary 
+// enable CORS - in the OCTOS I think that's not necessary
 if (!env.production) {
     app.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', '*');
@@ -23,6 +22,5 @@ if (!env.production) {
 
 app.use('/', index);
 app.use('/auth', authRoute);
-app.use('/test', testRoute);
 
 module.exports = app;
