@@ -1,6 +1,6 @@
 'use strict';
 
-const connService = require('../../services/mysqlConnect')
+const connService = require('../services/mysqlConnect')
 
 exports.authorize = async (email) => {
     const query = `SELECT * FROM users WHERE email = '${email}' LIMIT 1;`

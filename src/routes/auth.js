@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const authService = require('../../services/auth-service');
-const controller = require('../../controllers/auth/auth')
+const authService = require('../services/authService');
+const controller = require('../controllers/authController')
 
 router.post('/', controller.auth);
-// testing...
 router.get('/is-valid-token', authService.authorize, controller.isTokenValid);
 
 module.exports = router;

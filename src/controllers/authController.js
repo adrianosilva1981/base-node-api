@@ -1,6 +1,6 @@
-const authService = require('../../services/auth-service'); //services/auth-service
-const authRepository = require('../../repositories/auth/auth');
-const paramsValidator = require('../../validators/fluent-validator');
+const authService = require('../services/authService'); //services/auth-service
+const authRepository = require('../repositories/authRepository');
+const paramsValidator = require('../validators/fluent-validator');
 var phpPassword = require("node-php-password");
 
 exports.auth = async (req, res, next) => {
