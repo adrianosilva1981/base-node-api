@@ -2,7 +2,7 @@
 
 const connService = require('../../services/mysqlConnect')
 
-exports.authorize = (email, pass) => {
-    const query = `SELECT * FROM users WHERE email = '${email}' AND password = '${pass}' LIMIT 1;`
-    return connService.execQuery(query)
+exports.authorize = async (email) => {
+    const query = `SELECT * FROM users WHERE email = '${email}' LIMIT 1;`
+    return await connService.execQuery(query)
 };

@@ -2,9 +2,9 @@
 
 const mysql = require('mysql');
 const conn = require('../config/environments');
-const connection = mysql.createConnection(conn.mysql_conn);
 
 exports.execQuery = (query) => {
+    const connection = mysql.createConnection(conn.mysql_conn);
     return new Promise((resolve, reject) => {
         connection.connect();
         connection.query(query, (error, results) => {

@@ -1,14 +1,14 @@
 const authService = require('../../services/auth-service'); //services/auth-service
 const authRepository = require('../../repositories/auth/auth');
 const paramsValidator = require('../../validators/fluent-validator');
-const bcrypt = require('bcrypt');
+var phpPassword = require("node-php-password");
 
 exports.auth = async (req, res, next) => {
     try {
         const contract = new paramsValidator();
 
-        contract.isRequired(req.body.email, 'EMAIL IS REQUIRED');
-        contract.isRequired(req.body.password, 'PASSWORD IS REQUIRED');
+        contract.isRequired(req.body.email, "O campo 'email' é obrigatório");
+        contract.isRequired(req.body.password, "O campo 'password' é obrigatório");
 
         if (!contract.isValid()) {
             res.status(412).send(contract.errors());
@@ -17,27 +17,30 @@ exports.auth = async (req, res, next) => {
 
         let result = []
 
-        const email = req.body.email;
-        const password = bcrypt.hashSync(req.body.password, 0);
-        const authorize = await authRepository.authorize(email, password);
+        const email = req.body.email
+        const password = req.body.password
+        const authUser = await authRepository.authorize(email)
 
-        console.log(password)
+        if (!authUser.length) {
+            res.status(404).send({ 'message': 'Email não encontrado' });
+            return;
+        }
 
-        if (authorize.length) {
+        if (phpPassword.verify(password, authUser[0].password)) {
             const token = await authService.generateToken({
-                id: authorize[0].id,
-                email: authorize[0].email,
-                name: authorize[0].name
+                id: authUser[0].id,
+                email: authUser[0].email,
+                name: authUser[0].name
             });
 
             result.push({
-                id: authorize[0].id,
-                email: authorize[0].email,
-                name: authorize[0].name,
+                id: authUser[0].id,
+                email: authUser[0].email,
+                name: authUser[0].name,
                 token: token
             });
         } else {
-            result = {'message': 'INVALID LOGIN'};
+            result = { message: 'Senha inválida' };
         }
 
         res.status(200).send(result);
@@ -54,5 +57,5 @@ exports.isTokenValid = async (req, res, next) => {
         res.status(200).send(data);
     } catch (error) {
         res.status(500).send({ error: { message: error.message } });
-    }  
+    }
 };
