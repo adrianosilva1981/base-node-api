@@ -22,5 +22,6 @@ module.exports = {
         }
     },
     certificates_path: 'C:\\Projetos\\api-webmoview\\bin\\',
-    runnning_port: 3000
+    runnning_port: 3000,
+    socket_port: 4555
 }

@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const env = require('./config/environments');
 
 // routes
-const index = require('./routes/index');
+//const index = require('./routes/index');
 const authRoute = require('./routes/auth');
 const notifyRoute = require('./routes/notify');
 
@@ -20,7 +20,7 @@ if (!env.production) {
     });
 }
 
-app.use('/', index);
+// app.use('/', index);
 app.use('/auth', authRoute);
 app.use('/notify', notifyRoute);
 
