@@ -45,7 +45,7 @@ exports.auth = async (req, res, next) => {
 
         res.status(200).send(result);
     } catch (error) {
-        res.status(500).send({ error: { message: error.message } });
+        res.status(500).send({ message: error.message });
     }
 };
 
@@ -56,6 +56,6 @@ exports.isTokenValid = async (req, res, next) => {
         const data = await authService.decodeToken(token);
         res.status(200).send(data);
     } catch (error) {
-        res.status(500).send({ error: { message: error.message } });
+        res.status(500).send({ message: error.message });
     }
 };
