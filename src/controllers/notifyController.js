@@ -66,7 +66,7 @@ exports.clients = async (req, res, next) => {
         }
 
         clients.forEach(el => {
-            server.io.emit(el.id, el.message)
+            server.io.emit(`client_${el.id}`, el.message)
             next()
         });
 

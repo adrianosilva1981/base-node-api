@@ -23,9 +23,9 @@ const httpServer = http.createServer(app)
 const pushServer = http.createServer(app).listen(socketPort)
 const io = require("socket.io")(pushServer, {})
 
-io.on("connection", (socket) => {
+/* io.on("connection", (socket) => {
     console.log(`push server listening on port ${socketPort}`)
-})
+}) */
 
 httpServer.listen(port, () => {
     console.log(`app listening on port ${port}`)
