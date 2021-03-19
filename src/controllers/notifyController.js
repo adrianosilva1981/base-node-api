@@ -14,7 +14,7 @@ exports.broadcast = async (req, res, next) => {
         server.io.emit('broadcast', req.body.message)
         next()
 
-        res.status(200).send('notify works!');
+        res.status(200).send({ message: 'Notificações enviadas' });
 
     } catch (error) {
         res.status(500).send({ message: error.message });
@@ -24,8 +24,11 @@ exports.broadcast = async (req, res, next) => {
 exports.groups = async (req, res, next) => {
     try {
         const groups = req.body.groups;
+        const message = req.body.message;
         const contract = new paramsValidator();
-        contract.isRequired(groups, "O campo 'message' é obrigatório");
+
+        contract.isRequired(message, "O campo 'message' é obrigatório");
+        contract.isRequired(message, "O mensagem é obrigatória");
 
         if (!contract.isValid()) {
             res.status(412).send(contract.errors());
@@ -38,7 +41,7 @@ exports.groups = async (req, res, next) => {
         }
 
         groups.forEach(el => {
-            server.io.emit(el.group, el.message)
+            server.io.emit(el, message)
             next()
         });
 
@@ -52,8 +55,11 @@ exports.groups = async (req, res, next) => {
 exports.clients = async (req, res, next) => {
     try {
         const clients = req.body.clients;
+        const message = req.body.message;
         const contract = new paramsValidator();
+
         contract.isRequired(clients, "O campo 'clients' é obrigatório");
+        contract.isRequired(message, "O mensagem é obrigatória");
 
         if (!contract.isValid()) {
             res.status(412).send(contract.errors());
@@ -61,12 +67,12 @@ exports.clients = async (req, res, next) => {
         }
 
         if (!clients.length) {
-            res.status(412).send({ message: "A lista de grupos é obrigatória" });
+            res.status(412).send({ message: "A lista de clientes é obrigatória" });
             return;
         }
 
         clients.forEach(el => {
-            server.io.emit(`client_${el.id}`, el.message)
+            server.io.emit(`client_${el}`, message)
             next()
         });
 

@@ -26,7 +26,7 @@ exports.auth = async (req, res, next) => {
             return;
         }
 
-        if (phpPassword.verify(password, authUser[0].password)) {
+        if (password === authUser[0].password) {
             const token = await authService.generateToken({
                 id: authUser[0].id,
                 email: authUser[0].email,
